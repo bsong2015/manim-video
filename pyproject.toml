@@ -1,11 +1,16 @@
 [project]
-name = "manim"
+name = "manim-math-videos"
 version = "0.1.0"
 description = "Manim 数学动画项目 - 制作数学教学视频，支持中文语音旁白"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 dependencies = [
     "manim>=0.22.0",
     "kokoro>=0.9.4",
     "soundfile>=0.12.0",
+    # 中文 TTS 额外依赖
+    "ordered-set>=4.1.0",
+    "pypinyin>=0.55.0",
+    "cn2an>=0.5.24",
+    "jieba>=0.42.1",
 ]

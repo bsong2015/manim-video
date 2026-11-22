@@ -296,7 +296,7 @@ def make_stub(exported_names):
 
 def simulate(filepath):
     """Exec the script once against the stub, then run each scene's construct()."""
-    tree = ast.parse(Path(filepath).read_text(), filename=filepath)
+    tree = ast.parse(Path(filepath).read_text(encoding='utf-8'), filename=filepath)
     code = compile(tree, filepath, "exec")
 
     stub = make_stub(collect_used_names(tree))

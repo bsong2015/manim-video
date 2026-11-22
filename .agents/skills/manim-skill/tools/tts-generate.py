@@ -68,12 +68,27 @@ def get_pipeline(voice_id: str):
     if pipeline is not None:
         return pipeline
     try:
-        from kokoro import KPipeline
+        from kokoro import KPipeline, KModel
     except ImportError as e:
         raise RuntimeError(
             'Kokoro is not installed. Install it with: uv add "kokoro>=0.9.4" soundfile'
         ) from e
-    pipeline = KPipeline(lang_code=lang_code, repo_id=KOKORO_MODEL_ID, device="cpu")
+
+    # Load model from local files
+    model_dir = Path(KOKORO_MODEL_ID)
+    config_path = model_dir / "config.json"
+    model_path = model_dir / "kokoro-v1_0.pth"
+
+    if config_path.exists() and model_path.exists():
+        # Load from local files
+        with open(config_path, encoding='utf-8') as f:
+            config = json.load(f)
+        kmodel = KModel(config=config, model=str(model_path))
+        pipeline = KPipeline(lang_code=lang_code, model=kmodel, device="cpu")
+    else:
+        # Fall back to Hugging Face download
+        pipeline = KPipeline(lang_code=lang_code, repo_id="hexgrad/Kokoro-82M", device="cpu")
+
     _PIPELINES[lang_code] = pipeline
     return pipeline
 
