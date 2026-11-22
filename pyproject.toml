@@ -1,0 +1,11 @@
+[project]
+name = "manim"
+version = "0.1.0"
+description = "Manim 数学动画项目 - 制作数学教学视频，支持中文语音旁白"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "manim>=0.22.0",
+    "kokoro>=0.9.4",
+    "soundfile>=0.12.0",
+]

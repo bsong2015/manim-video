@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "skills": {
+    "manimce-best-practices": {
+      "source": "adithya-s-k/manim_skill",
+      "commit": "cef045011722d285692e3381d12d4d637da56e18",
+      "sourceType": "github",
+      "skillPath": "skills/manimce-best-practices/SKILL.md",
+      "computedHash": "72d195ae744e610814cc951fd3475a392d9c2dd47e0cc6d0af97874cf9bd85bc"
+    }
+  }
+}
