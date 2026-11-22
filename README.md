@@ -18,8 +18,8 @@
 
 ```bash
 # 克隆项目
-git clone <repo-url>
-cd manim-math-videos
+git clone git@github.com:bsong2015/manim-video.git
+cd manim-video
 
 # 安装所有依赖
 uv sync
@@ -71,6 +71,7 @@ HF_ENDPOINT=https://hf-mirror.com
 #### Step 1: 创建会话目录
 
 ```bash
+# 在项目根目录下创建会话目录
 mkdir -p .manim-skill/<project-name>
 cd .manim-skill/<project-name>
 ```
@@ -89,6 +90,9 @@ subtitles:
 #### Step 3: 生成 TTS 音频
 
 ```bash
+# 设置 tools 目录路径
+TOOLS_DIR=".agents/skills/manim-skill/tools"
+
 # 中文女声
 uv run python "$TOOLS_DIR/tts-generate.py" --narration narration.txt --voice zf_xiaoxiao
 
@@ -130,6 +134,8 @@ class Scene1_Introduction(Scene):
 uv run python "$TOOLS_DIR/lint-subtitles.py" script.py
 ```
 
+确保字幕时间与动画时间对齐。
+
 #### Step 6: 渲染视频
 
 ```bash
@@ -139,20 +145,21 @@ uv run manim script.py Scene1 Scene2 Scene3 ...
 #### Step 7: 合并视频和音频
 
 ```bash
-# 创建场景列表
+# 创建场景列表 concat.txt（Windows 用户可用记事本创建）
+# Linux/Mac:
 cat > concat.txt << EOF
 file 'media/videos/script/480p15/Scene1.mp4'
 file 'media/videos/script/480p15/Scene2.mp4'
 EOF
 
+# Windows PowerShell:
+# Set-Content -Path concat.txt -Value "file 'media/videos/script/480p15/Scene1.mp4'", "file 'media/videos/script/480p15/Scene2.mp4'"
+
 # 合并场景
 ffmpeg -y -f concat -safe 0 -i concat.txt -c copy video_silent.mp4
 
 # 添加音频
-ffmpeg -y -i video_silent.mp4 -i voiceover.mp3 \
-  -map 0:v:0 -map 1:a:0 \
-  -c:v copy -c:a aac \
-  -movflags +faststart video.mp4
+ffmpeg -y -i video_silent.mp4 -i voiceover.mp3 -map 0:v:0 -map 1:a:0 -c:v copy -c:a aac -movflags +faststart video.mp4
 ```
 
 ### 中文语音选项
@@ -181,12 +188,18 @@ ffmpeg -y -i video_silent.mp4 -i voiceover.mp3 \
 ## 项目结构
 
 ```
-D:\Python\manim\
+manim-video/
 ├── .agents/
 │   └── skills/              # Skills 实际文件
+│       ├── manim-skill/
+│       │   └── tools/
+│       │       ├── Kokoro-82M/   # TTS 模型
+│       │       ├── tts-generate.py
+│       │       └── lint-subtitles.py
+│       └── manimce-best-practices/
 ├── .claude/
 │   └── skills/              # Skills 符号链接
-├── .env                     # 环境变量配置
+├── .env                     # HF 镜像配置（可选）
 ├── .gitignore
 ├── .python-version
 ├── .venv/                   # 虚拟环境
@@ -197,9 +210,9 @@ D:\Python\manim\
 
 ## 常见问题
 
-### 1. 项目名称冲突
+### 1. 项目名称
 
-项目名称 `manim` 与包名冲突，已改为 `manim-math-videos`。
+项目名称 `manim-video`，在 `pyproject.toml` 中定义为 `manim-math-videos`（避免与 `manim` 包名冲突）。
 
 ### 2. Python 版本要求
 
